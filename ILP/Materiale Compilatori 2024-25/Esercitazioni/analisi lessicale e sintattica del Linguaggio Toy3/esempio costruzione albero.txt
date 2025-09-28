@@ -1,0 +1,35 @@
+program
+
+x | y = 10 : int;
+
+begin
+x | y << ;
+if (x > y) then {
+"I valori di x e y sono:", x, " ", y !>> ;
+} 
+end
+
+ProgramOp
+	VarDeclOp
+		VarInitOp
+			identifier : x
+			null
+		VarInitOp
+			identifier : y
+			10
+		integer
+			
+	BeginEndOp	
+		ReadOp
+			identifier : x
+			identifier : y
+		IfThenOp
+			GTOp
+				identifier:x
+				identifier:y
+			BodyOp
+				WriteOp
+					stringConst: "I valori di x e y sono:"
+					identifier : x
+					stringConst: " "
+					identifier : y

@@ -1,0 +1,41 @@
+Esercizi:
+
+1.
+La seguente grammatica è ambigua? Mostrare perchè.
+A -> a B
+A -> C b
+C -> a
+B -> b
+
+2. Scrivere una grammatica per il costrutto <dichiarazione variabili intere> come questo:
+
+<tipo_int> <lista di identificatori separati da virgola> <punto e virgola>
+
+Si identifichino prima i terminali (token) ed i non terminali
+
+esempio 1
+int a;
+
+esempio 2
+int a, b, c;
+
+esempio 3
+int a1, a2, a3, a4, a5, a6, a7, a8, a9, a10;
+
+
+3. Scrivere una grammatica per il costrutto <dichiarazione di funzione semplice> come questo:
+
+<tipo void di ritorno> <nome funzione> <lista degli argomenti vuota> 
+<parentesi graffa aperta> <dichiarazione variabili intere (come sopra)>
+<chiamata a funzione con un parametro> <punto e virgola> <parentesi graffa chiusa>
+
+Si identifichino prima i terminali (token) ed i non terminali
+
+esempio:
+
+void main () {
+int a, b;
+
+f(b);
+
+}

@@ -1,0 +1,37 @@
+Esempi di grammatiche non LL(1)
+
+Per ogni grammatica si mostri: tabella FIRST e FOLLOW per ogni simbolo, il FIRST per ogni produzione, il risultato dell'applicazione delle tre regole, il conflitto nella tabella LL 
+
+Date le due produzioni in A:  A -> alfa | beta
+
+Infrangono prima regola:  FIRST(alfa) intersecato FIRST(beta) = vuoto
+
+D -> A B  | a
+A -> a
+B -> b
+
+
+D -> A B | a
+A -> b | ''
+B -> a
+
+
+Infrange seconda regola:  solo uno tra alfa e beta può derivare in zero o più passi la parola vuota   
+
+D -> A B | C
+A -> b | ''
+B -> c | ''
+C -> d | ''
+
+
+Infrange terza regola: se beta deriva la parola vuota in zero o più passi allora FIRST(alfa) intersecato Follow(A) = vuoto   [è vera anche scambiando alfa con beta]
+
+D -> A B | a
+A -> b | ''
+B -> b
+
+
+E' possibile provare questo esercizio su 
+https://www.cs.princeton.edu/courses/archive/spring20/cos320/LL1/
+Sostituire le frecce -> con ::=  e scrivere esplicitamente tutte le produzioni
+(si leggano le Formatting Instructions)

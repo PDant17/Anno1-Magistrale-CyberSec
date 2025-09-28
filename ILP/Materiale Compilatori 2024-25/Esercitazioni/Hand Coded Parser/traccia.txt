@@ -1,0 +1,49 @@
+Data la seguente grammatica
+
+(
+ N = {S, Program, Stmt, Expr},
+ T = {EOF,   ';' , IF, THEN, ELSE, END, ID, ASSIGN, WHILE, LOOP, RELOP, NUMBER},  
+ S
+ P = {
+
+         
+
+S
+  -> Program  EOF
+
+Program
+  -> Program ; Stmt
+  | Stmt
+
+Stmt
+  -> IF Expr THEN Stmt END IF
+  | IF Expr THEN Stmt ELSE Stmt END IF
+  | ID ASSIGN Expr
+  | WHILE Expr LOOP Stmt END LOOP
+
+Expr
+  -> Expr RELOP Expr
+  | ID
+  | NUMBER
+
+       }
+)
+
+Dove i tokens sono per lo più quelli definiti nella esercitazione 1 precedente.
+
+Se qualcuno non ha usato il token RELOP  ma i singoli tokens LT, LE, EQ, etc. può modificare questa grammatica trasformando il token RELOP nel non terminale Relop ed aggiungendo la seguente produzione:
+Relop -> LE | LT | EQ etc.
+
+Il token EOF deve essere restituito dall' analizzatore lessicale quando esso incontra la fine del file. Questo riconoscimento va aggiunto all'esercitazione 1 se non già considerato.
+
+Costruire un parser top-down a discesa ricorsiva seguendo le indicazioni della sezione 4.4.1 del testo di riferimento (pag. 219 - Recursive Descend Parsing).
+Verificare prima se la grammatica può essere utilizzata per costruire un parser top-down. Nel caso non lo sia, applicare le trasformazioni necessarie senza alterare il linguaggio risultante (si veda il libro di testo).
+
+Il parser deve invocare la funzione next_token() sviluppata nell'esercitazione 1 opportunamente modificata.
+ATTENZIONE: non è necessario aggiornare il gitlab con l'esercitazione 1 modificata. Verrà creato un nuovo repository per l'esercitazione 3
+
+Oltre i test in allegato si costruiscano propri test sia con input corretti  che scorretti sintatticamente. Fra i vostri test  aggiungete le versioni corrette dei test forniti. La qualità dei test di input è importante.
+
+Si noti che nell'esempio, per semplificare, tutti i token input vengono raccolti in un array e solo dopo vengono "parsati". Si ricordi che, invece, la richiesta dei token al lexer DEVE AVVENIRE on demand durante il parsing.
+
+Si noti inoltre che qui è stata aggiunta la predittività usando la funzione first(). Ovvero la produzione in T viene scelta "sbirciando" il simbolo corrente nell'input. Poichè in questo caso la grammatica è LL(1) allora il parser risultante, anche se svolto a mano tramite discesa ricorsiva, è equivalente a quello predittivo.

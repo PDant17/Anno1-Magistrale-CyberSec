@@ -1,0 +1,11 @@
+Come faccio a vedere se una grammatica è LL(1)?
+
+1. E' adatta al top-down parsing? 
+   Scontato che sia ben formata, controllo che 
+	a. non sia ambigua (ma solo se è facile da scoprire. Infatti, se lo fosse, i controlli al punto 2. troverebbero comunque che la grammatica non è LL(1))
+	b. non abbia ricorsione sinistra (se ci fosse la trasformo)
+	c. non sia fattorizzabile a sinistra (se lo fosse la fattorizzo)
+2. Se adatta al top-down parsing, è LL(1)?
+	Posso fare UNA delle due cose (ma se ho tempo da perdere, anche entrambi):
+	a. controllo che le tre regole siano verificate  (più veloce)
+	b. costruisco la parsing table e controllo che non ci siano conflitti

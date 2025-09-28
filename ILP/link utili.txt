@@ -1,0 +1,25 @@
+Sito per testare le regex:
+https://regex101.com/
+
+Esempi di specifiche lessicali:
+- https://docs.oracle.com/javase/specs/jls/se9/html/index.html (Cap.3 in particolare)
+- https://openjdk.org/jeps/443
+- https://www.claudiodesio.com/en/java-underscore/
+
+Sito di jflex:
+https://jflex.de/
+
+Sito per il calcolo di FIRST e FOLLOW:
+https://www.cs.princeton.edu/courses/archive/spring20/cos320/LL1/
+
+Sito che mostra gli insiemi di items SLR data una grammatica:
+https://jsmachines.sourceforge.net/machines/slr.html
+
+cup in IntelliJ:
+https://www2.cs.tum.edu/projects/cup/
+
+Approfondimento per cup:
+https://github.com/vbmacher/cup-maven-plugin
+
+Approfondimento scoping in Java:
+https://stackoverflow.com/questions/20499554/block-scope-variables

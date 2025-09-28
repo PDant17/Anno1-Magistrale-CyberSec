@@ -1,0 +1,25 @@
+1)
+
+Costruire un parser  LL(1) per la seguente grammatica
+
+S -> T c
+T -> A B
+A -> a | ''
+B -> b | ''
+
+che succede se b viene sostituita da a?
+Provare l'esecuzione sull'input "c"
+
+
+2)
+
+Esercitarsi ripercorrendo l'esecuzione di un parser a discesa ricorsivo non predittivo costruito sulla seguente grammatica 
+
+S -> A | B
+A -> a A | c
+B -> a B | d
+
+ed utlizzando il seguente input:   aaaad
+
+Il parser usa backtracking?
+La grammatica è LL(1)?

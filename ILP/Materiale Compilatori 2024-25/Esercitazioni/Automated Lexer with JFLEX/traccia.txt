@@ -1,0 +1,19 @@
+Svolgere l'Esercitazione 1 utilizzando jflex. Per compatibilità con l'esercitazione 1 la configurazione iniziale di jflex consigliata è 
+
+%class Lexer
+%cupsym Token
+%cup
+
+(non usare assolutamente %standalone)
+Si ricordi che la direttiva %cup fissa come default il nome next_token() per il metodo di scanning (diverso dal nome nextToken() usato per l'Esercitazione 1)
+
+Si ricordi inoltre, di creare una classe java dei simboli che conterrà solo la dichiarazione dei tokens. Ad es:
+
+public class sym {
+    public static final int EOF=0;
+    public static final int NUMBER=1;
+    ..
+}
+E' possibile inserire altri costrutti presi dall'esempio nel manuale come ad esempio le stringhe ed i commenti.
+
+Per errori lessicali restituire il token ERROR con attributo il messaggio di errore. Riportare anche il numero di linea e di riga oltre che il carattere che ha generato l'errore.

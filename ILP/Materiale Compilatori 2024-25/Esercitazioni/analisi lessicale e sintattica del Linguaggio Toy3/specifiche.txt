@@ -1,0 +1,189 @@
+Versione finale del 6 dicembre ore 11:00 
+
+ultime modifiche dalla versione del 5 dicembre:
+1. AMPERSAND '&' è stato sostituito da PIPE '|' (& era troppo "rumoroso") 
+(gli esempi sono aggiornati)
+2. Per l'inizializzazione di variabili usiamo ASSIGNDECL che è dato dal lessema '='
+invece che EQ che invece ha lessema ==
+
+UTILIZZATE QUESTA VERSIONE ED ESTENDETELA CON PRECEDENZE SU OPERATORI
+
+Questa grammatica non ha conflitti a meno di precedenze su operatori.
+Non aggiungete precedenze su simboli che non siano operatori (es. ID, COMMA, ASSIGN, etc.)
+
+
+
+
+
+Programma :  PROGRAM Decls BEGIN VarDecls Statements END
+
+Decls : VarDecl Decls 
+      | DefDecl Decls
+      | ε
+
+VarDecls : VarDecls VarDecl
+         | ε
+
+
+
+VarDecl : VarsOptInit COLON TypeOrConstant SEMI
+
+VarsOptInit: ID PIPE VarsOptInit
+	   | ID ASSIGNDECL Expr PIPE VarsOptInit
+	   | ID
+	   | ID ASSIGNDECL Expr
+
+  
+TypeOrConstant : Type 
+	       | Constant
+
+Type : INT  |  BOOL   |  DOUBLE   | STRING | CHAR 
+
+Constant : TRUE
+          | FALSE
+          | INT_CONST
+          | DOUBLE_CONST
+          | CHAR_CONST
+          | STRING_CONST
+
+
+DefDecl : DEF ID LPAR ParDecls RPAR OptType Body
+        | DEF ID LPAR  RPAR OptType Body
+
+ParDecls  : Pardecl SEMI ParDecls
+          | Pardecl
+	  
+ParDecl : PVars COLON Type
+
+PVars : PVar COMMA PVars
+      | PVar
+
+PVar : ID | REF ID
+
+
+OptType : COLON Type
+         | ε
+
+Body : LBRAC VarDecls Statements RBRAC 
+
+Statements : Stat Statements
+	   | ε
+
+
+Stat :   Vars IN SEMI
+        | Exprs OUT SEMI
+        | Exprs OUTNL SEMI
+	| Vars ASSIGN Exprs SEMI      //il controllo che con un più ID non è possibile assegnare una funzione è fatto nell'analisi semantica
+	| FunCall SEMI
+        | IF LPAR Expr RPAR THEN Body ELSE Body 
+        | IF LPAR Expr RPAR THEN Body 
+        | WHILE LPAR Expr RPAR DO Body 
+	| RETURN expr SEMI
+
+
+Vars    : ID PIPE Vars
+        | ID
+
+Exprs :  Expr COMMA  Exprs  
+	| Expr
+
+
+FunCall : ID LPAR Exprs RPAR 	
+        | ID LPAR RPAR 
+
+
+Expr   : Expr ArithOp Expr
+		| Expr BoolOp Expr
+	        | Expr RelOp Expr
+		| LPAR Expr RPAR
+	        | MINUS Expr
+	        | NOT Expr
+	        | ID
+                | FunCall
+		| Constant
+
+ArithOp : PLUS  |  MINUS  | TIMES  |  DIV 
+
+BoolOp : AND | OR  
+
+RelOp  :  GT | GE | LT | LE | EQ | NE
+
+
+
+************ Specifica lessicale ****************************+
+
+I commenti di linea iniziano con  "//"
+Un blocco di commenti è delimitato da /* e  */
+
+PROGRAM		program
+BEGIN		begin
+END		end
+SEMI            ;
+COLON		:
+INT             int
+BOOL            bool
+DOUBLE          double
+STRING          string
+CHAR            char
+ID              jletter (jletter | jdigit)*
+COMMA           ,
+DEF             def
+LPAR            (
+RPAR            )
+LBRAC           {
+RBRAC           }
+IN              <<
+OUT             >>
+OUTNL           !>>
+PLUS            +
+MINUS           -
+TIMES           *
+DIV             /
+INT_CONST       pattern per interi
+DOUBLE_CONST    pattern per double
+STRING_CONST    pattern per stringhe
+CHAR_CONST      pattern per costanti
+TRUE            true
+FALSE           false
+RETURN		return
+ASSIGN          :=
+ASSIGNDECL      =
+IF              if
+THEN            then
+WHILE           while
+DO              do
+ELSE            else
+GT              >
+GE              >=
+LT              <
+LE       	<=
+EQ         	==
+NE 		<>
+NOT   		not
+AND       	and
+OR              or
+REF        	ref
+PIPE		|
+
+PRECEDENZE (dalla più alta alla più bassa) ed ASSOCIATIVITA' (sinistra se non indicata)
+
+() 
+* /
++ -                     #associatività sinistra se binaria altrimenti, destra
+ ==  <> < <= > >=      
+not                     #associatività  destra
+and
+or
+
+N.B. vanno codificate in javacup solo quelle che servono per togliere i conflitti, non necessariamente tutte
+	
+
+Bisogna dare errore di 
+- "Stringa costante non completata" nel caso il programma input presenti una stringa 
+costante aperta ma non chiusa (es. "questa è una stringa non chiusa ).
+- "Commento non chiuso" nel caso il programma input presenti un commento non chiuso 
+(es. /* questo è un commento non chiuso )
+
+Nota: in entrambi i casi si raggiunge l'EOF mentre si sta riconoscendo un commento 
+o una stringa. Se si usano gli stati jflex (ad es. COMMENT e STRING), questo si 
+traduce nell'incontrare un EOF mentre si è nel corrispondente stato.

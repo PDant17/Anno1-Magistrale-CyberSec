@@ -1,0 +1,103 @@
+Qui ci sono esercizi lasciati come consegne su e-learning.
+
+Mostrare l'ouput delle varie fasi di compilazione sul seguente codice:
+main(){
+      int a = 1;
+      if (a==1) printf("ciao");
+}
+
+------------------------------------
+
+Data una semplice istruzione X := X + 1 quali sono le scelte da fare? chi le deve fare? e quando vanno fatte?
+
+------------------------------------
+
+Pag.125 es. 3.3.1 (solo Java e C)
+Dare un esempio di parola per ciascuna delle espressioni regolari indicate alle voci a, b, c, d, e dell'es. 3.3.2
+
+------------------------------------
+
+Costruzione di grammatiche per i linguaggi descritti da a*, a*b*, a^nb^n con n>= 1
+
+------------------------------------
+
+esercizi 4.4.1 a)-c) (pag. 231) Lanciare il parser LL(1) ottenuto (se ottenuto) sull'input presente nei vari esercizi così come mostrato in classe mostrando il progredire dello stack, dell'input e dell'output.
+
+------------------------------------
+
+Scrivere una grammatica che generi istruzioni switch del tipo (dapprima si definiscano i tokens da usare come terminali):
+switch (key) {
+    case "start":
+        // Statements;
+        break;
+    case "type":
+        // Statements;
+        break;
+    case "AttachPoints":
+        // Statements;
+        break;
+}
+
+------------------------------------
+
+data una grammatica LL(1) posso costruire su di essa un parser a discesa ricorsiva e modificarlo in modo che sia predittivo? Come?
+
+------------------------------------
+
+Date le grammatiche G1 e G2 riempire la seguente tabella con SI e NO (tutte le caselle devono essere compilate).)
+
+TABELLA da riempire (al momento non si considerino le colonne LR(1) ed LALR(1))
+
+           | ambigua | SLR(1) | LR(1) | LALR(1) |  LL(1)
+G1      |                  |              |            |                |
+G2      |                  |              |            |                |
+
+Grammatica G1
+S -> a B
+S -> A b
+A -> a
+B -> b
+
+Grammatica G2
+S -> a B c
+B -> b
+B -> b c
+
+------------------------------------
+
+Esercitazione in aula su implementazione di una calcolatrice tramite jflex e cup. Passi da seguire:
+1. creare un nuovo progetto IntelliJ Calcolatrice
+2. utilizzare gli esempi sul linguaggio Circuit per copiare il pom.xml, riprodurre l'organizzazione dei files in cartelle,  notare l'utilizzo dei package ed import,  etc.
+3. nella cartella srcjflexcup creare un file calcolatrice.flex prendendo spunto dal .flex da voi prodotto dall'esercitazione 2
+4. nella cartella srcjflexcup creare un file calcolatrice.cup copiando SOLO la specifica dei terminali, non terminali e grammatica dalla documentazione di cup (si usi prima la specifica senza regole di calcolo e poi aggiungerle successivamente)
+5. si aggiorni il pom.xml con il nuovo nome della specifica cup.
+6. NOTA BENE: la specifica jflex deve definire SOLO i terminali dichiarati nella specifica cup. (Si noti tale corrispondenza nei files di Circuit)
+7. Si faccia attenzione al fatto che l'attributo del token NUMBER è atteso di tipo Integer nella specifica cup e tale deve essere quando inviato nella specifica lex.
+8. Si ricordi che i passi per l'esecuzione del vostro parser sono:
+	a. compilazione dei file .flex e .cup (tramite Maven) per ottenere i tre files  che costiuiscono i sorgenti java del parser
+	b. lancio del parser, eseguendo il main() da voi creato in classe a parte. (Si veda sempre Circuit per vedere come lanciare il parser tramite java)
+9. Se si vuole forzare la ricompilazione del .cup per generare gli stati del parser, va fatta una qualsiasi modifica (anche inserimento di uno spazio) nel file .cup e poi va lanciato di nuovo  il comando Compile di Maven.
+10. Nel caso di syntax error, il debug del vostro parser si fa tenendo ben visibili: 
+	a. l'automa di stati generato dalla compilazione maven sulla gram matica,
+	b. il trace del parser, con shift e reduce, prodotto dal lancio del metodo debug_parse(), e 
+	c. il file sym per la corrispondenza token -> codice_numerico citato nel trace.
+Trovato il testo "syntax error" nel trace (al punto 2), si analizzano le ultime precedenti azioni del parser eseguendo a mano l'algoritmo di parsing LR  (sull'automa al punto 1) come studiato al corso.
+
+------------------------------------
+
+Risoluzione del conflitto nel caso di istruzioni (Sts) di assegnazione che seguono dichiarazioni (Ds)
+x:= y : integer;  // dichiarazione
+x:= y;  // istruzione
+
+S' -> S
+S -> Ds Sts   
+Ds -> D Ds    // invertendo per avere ricorsione sinistra si eliminano conflitti
+Ds -> ''
+Sts -> St Sts
+Sts -> ''
+D -> a b
+St -> a
+
+(si immagini che il token a sia un'assegnazione).
+
+------------------------------------

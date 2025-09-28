@@ -1,0 +1,11 @@
+Date le seguenti specifiche lessicali e sintattiche del linguaggio Toy3, 
+
+scrivere un programma Toy3 (si veda questo esempio di codice) che 
+visualizzi un menu in cui un utente può scegliere l' operazione aritmetica da svolgere
+richieda all'utente gli input (interi o double) necessari per svolgere l'operazione scelta
+esegua l'operazione, restituisca il risultato e chieda se si vuol continuare
+all'input 0 oppure 1 il programma  conclude oppure mostra il menu iniziale, rispettivamente.
+N.B. si utilizzino almeno due funzioni. In generale, si cerchi di utilizzare tutte le  (poche) caratteristiche del linguaggio.
+allo scopo di poter verificare la correttezza sintattica del programma di cui sopra, si costruisca un lexer ed un parser per Toy3 tramite Jflex e CUP. Per il loro uso si faccia riferimento al materiale dato nella lezione su CUP ma soprattutto alla lezione 22.
+L'analizzatore sintattico può interrompersi al primo errore sintattico incontrato.
+Utilizzare la grammatica implementata al punto 2. per costruire gli alberi sintattici secondo questa specifica (questo è un esempio di costruzione albero). Per verificare la correttezza del proprio software si utilizzi il pattern visitor per stampare l'albero sintattico in formato XML (per visualizzare l' XML si può usare Google Chrome o http://codebeautify.org/xmlviewer o qualsiasi altro tool), altrimenti è possibile creare e visualizzare l'albero direttamente senza passare per XML tramite questa libreria Java , o altre.
