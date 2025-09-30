@@ -1,0 +1,1 @@
+La cartella resterà vuota, dato che si tratta di un corso nuovo aggiunto per l'anno corrente.
