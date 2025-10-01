@@ -1,0 +1,1 @@
+Il materiale nelle cartelle fa riferimento alla seconda parte del corso, pertanto va visto dopo aver completato le slide con la lezione 24.

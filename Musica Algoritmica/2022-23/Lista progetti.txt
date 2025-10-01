@@ -1,0 +1,7 @@
+
+https://www.donyaquick.com/generative-jazz/
+https://github.com/AI-Guru/music-generation-research
+https://github.com/carlosholivan/DeepLearningMusicGeneration
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9410918/ - A Lightweight Deep Learning-Based Approach for Jazz Music Generation in MIDI Format
+https://apacha.github.io/OMR-Daatasets
+
