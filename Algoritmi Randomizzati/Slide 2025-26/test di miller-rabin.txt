@@ -1,0 +1,172 @@
+/*
+ * Miller–Rabin Primality Test per interi arbitrariamente grandi (GMP).
+ *
+ * Dipendenze: libreria GMP (gmp.h, -lgmp)
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <gmp.h>
+
+/*----------------------------------------------------------
+ * Moltiplicazione modulo n
+ * x = (a * b) mod n
+ * (con GMP mul è già big-int safe)
+ *----------------------------------------------------------*/
+static void mulmod(mpz_t x, const mpz_t a, const mpz_t b, const mpz_t n) {
+    mpz_mul(x, a, b);
+    mpz_mod(x, x, n); 
+}
+
+/*----------------------------------------------------------
+ * Esponenziazione modulare
+ * x = a^e mod n
+ *
+ * Corrisponde al calcolo iniziale x = a^d mod n
+ *----------------------------------------------------------*/
+static void powmod(mpz_t x, const mpz_t a, const mpz_t e, const mpz_t n) {
+    mpz_powm(x, a, e, n);  // GMP ha già l'esponenziazione modulare efficiente
+}
+
+
+/*
+ * cerca_testimone_MR(a, n)
+ *
+ * Restituisce:
+ *   1  se da 'a' si trova un testimone di COMPOSTEZZA di n
+ *   0  altrimenti
+ */
+static int cerca_testimone_MR(const mpz_t a, const mpz_t n) {
+    mpz_t d, x, n_meno_1;
+    mpz_inits(d, x, n_meno_1, NULL);
+
+    // si parte con d = n-1
+    mpz_sub_ui(n_meno_1, n, 1);
+    mpz_set(d, n_meno_1);
+
+    // Decomposizione n-1 = 2^r * d con d dispari
+    int r = 0;
+    while (mpz_even_p(d)) {
+        mpz_fdiv_q_2exp(d, d, 1);  // d = d / 2
+        r++;
+    }
+    // adesso n-1 = 2^r * d con d dispari
+
+    // x = a^d mod n
+    powmod(x, a, d, n);
+
+    // Caso rapido: x ≡ 1 mod n oppure x ≡ -1 mod n --> non abbiamo un testimone
+    if (mpz_cmp_ui(x, 1) == 0 || mpz_cmp(x, n_meno_1) == 0) {
+        mpz_clears(d, x, n_meno_1, NULL);
+        return 0;  // questo a NON dimostra che n è composto
+    }
+
+    // Quadrature successive: x <-- x^2 mod n e controlliamo se compaiono:
+    //   -1 (CASO "probabilmente primo" per questo a)
+    //    1 prima di -1 (radice non banale)
+    for (int i = 1; i < r; i++) {
+        mulmod(x, x, x, n);  // x = x^2 mod n
+
+        // Se compare n-1 --> x ≡ -1 mod n, questo round non trova testimone
+        if (mpz_cmp(x, n_meno_1) == 0) {
+            mpz_clears(d, x, n_meno_1, NULL);
+            return 0;
+        }
+
+        // Se compare 1 prima di n-1 --> abbiamo radice non banale
+        if (mpz_cmp_ui(x, 1) == 0) {
+            // testimone radice: n è certamente composto
+            mpz_clears(d, x, n_meno_1, NULL);
+            return 1;
+        }
+    }
+
+    // Se arriviamo qui:
+    // Se (a^(n-1) != 1 mod n) testimone di Fermat
+    // Se (a^(n-1) = 1 mod n)  testimone radice  
+    mpz_clears(d, x, n_meno_1, NULL);
+    return 1;  // testimone di compostezza (Fermat o radice)
+}
+
+/*----------------------------------------------------------
+ * Versione randomizzata di Miller–Rabin.
+ *
+ * miller_rabin(n, k, state)
+ *
+ *  - n: intero da testare
+ *  - k: numero di round (basi casuali)
+ *  - state: stato RNG GMP
+ *
+ * Restituisce:
+ *   1  se n è "probabilmente primo"
+ *   0  se n è sicuramente composito
+ *
+ *----------------------------------------------------------*/
+int miller_rabin(const mpz_t n, int k, gmp_randstate_t state) {
+    // Gestione casi triviali
+    if (mpz_cmp_ui(n, 2) < 0) return 0;          // n < 2 -> non primo
+    if (mpz_cmp_ui(n, 2) == 0) return 1;         // 2 è primo
+    if (mpz_even_p(n)) return 0;                 // pari > 2 -> composto
+
+    
+    mpz_t a, n_meno_3, g;
+    mpz_inits(a, n_meno_3, g, NULL);
+
+    // n_meno_3 = n - 3;
+    mpz_sub_ui(n_meno_3, n, 3);
+
+    for (int i = 0; i < k; i++) { // k iterazioni
+        // Scegli a uniformemente in {2, ..., n-2}
+        mpz_urandomm(a, state, n_meno_3);
+        mpz_add_ui(a, a, 2);
+
+        // Caso triviale: se gcd(a, n) > 1 --> n composto
+        mpz_gcd(g, a, n);
+        if (mpz_cmp_ui(g, 1) > 0 && mpz_cmp(g, n) < 0) {
+            mpz_clears(a, n_meno_3, g, NULL);
+            return 0;  // composto (gcd-testimone)
+        }
+
+        // Cerca testimone con base a
+        if (cerca_testimone_MR(a, n)) {
+            mpz_clears(a, n_meno_3, g, NULL);
+            return 0;  // composto (testimone-Fermat o testimone-radice)
+        }
+    }
+
+    mpz_clears(a, n_meno_3, g, NULL);
+    return 1;  // probabilmente primo (errore < 4^{-k})
+}
+
+/*----------------------------------------------------------
+ * MAIN di esempio
+ *
+ * - Inizializza RNG GMP
+ * - Testa alcuni numeri molto grandi (ben oltre 64 bit)
+ * - Chiama miller_rabin con k round
+ *----------------------------------------------------------*/
+int main(void) {
+
+    const int k = 64;  // numero di round (probabilità di errore < 4^{-64})
+
+    // Stato random GMP
+    gmp_randstate_t state;
+    gmp_randinit_default(state);
+    gmp_randseed_ui(state, (unsigned long)time(NULL));
+
+    mpz_t n;
+    mpz_init(n);
+
+    mpz_set_str(n, "6552306792216922797092990717165490021798997917617665610007947856540424523134073963920125204108611827", 10);
+
+    int res = miller_rabin(n, k, state);
+    if (res)
+        printf("  Risultato: PROBABILMENTE PRIMO (k = %d)\n\n", k);
+    else
+        printf("  Risultato: COMPOSTO\n\n");
+    
+    mpz_clear(n);
+    gmp_randclear(state);
+    return 0;
+}

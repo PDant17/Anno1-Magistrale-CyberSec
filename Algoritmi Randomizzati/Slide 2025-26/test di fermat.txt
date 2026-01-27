@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+unsigned long long modexp(unsigned long long a, unsigned long long e,
+                          unsigned long long n) {
+    unsigned long long r = 1;
+    while (e > 0) {
+        if (e & 1) 
+            r = (__uint128_t)r * a % n;
+        a = (__uint128_t)a * a % n;
+        e >>= 1;
+    }
+    return r;
+}
+
+int fermat(unsigned long long n, int k) {
+    if (n < 2) return 0;
+    for (int i = 0; i < k; i++) {
+        unsigned long long a = 1 + rand() % (n - 1);
+        if (modexp(a, n-1, n) != 1)
+            return 0; // numero composto
+    }
+    return 1; // numero probabilmente primo
+}
+
+int main() {
+    unsigned long long n;
+    //n = 1000000000000000003ULL;   
+    n = 3215031751ULL; // Carmichael
+    printf("%d\n", fermat(n, 65));
+    return 0;
+}
